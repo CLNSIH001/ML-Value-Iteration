@@ -3,6 +3,7 @@
 
 namespace CLNSIH001{
     using namespace std;
+    
     State::State(const int && s) : state(s)
     {
         if (state != endState){Actions();}
@@ -39,4 +40,30 @@ namespace CLNSIH001{
         return a;
     }
 
+    int Algorithm::Reward(State s, string action){
+        if (s.getState() == 2 && action == "right"){return 50;}
+        else if (s.getState() == 6 && action == "up"){return 100;}
+        else
+        {
+            return 0;
+        }
+    }  
+    State Algorithm::movesTo(State s, string action){
+        if (action == "up"){
+            int nextState = s.getState()-3;
+            return states[nextState-1];
+        }
+        else if (action == "down"){
+            int nextState = s.getState()+3;
+            return states[nextState-1];
+        }
+        else if (action == "left"){
+            int nextState = s.getState()-1;
+            return states[nextState-1];
+        }
+        else if (action == "right"){
+            int nextState = s.getState()+1;
+            return states[nextState-1];
+        }       
+    }
 }
