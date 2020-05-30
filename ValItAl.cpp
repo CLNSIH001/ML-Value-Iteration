@@ -1,5 +1,5 @@
 #include "ValItAl.hpp"
-#include <iostream>
+#include <fstream>
 
 namespace CLNSIH001{
     using namespace std;
@@ -28,15 +28,15 @@ namespace CLNSIH001{
         return 's'+to_string(state)+": "+'('+to_string(x)+','+to_string(y)+')';
     }
     
-    int State::getState(){
+    int State::getState()const{
         int s = state;
         return s;
     }
-    string State::getGridIndex(){
+    string State::getGridIndex()const{
         string i = gridIndex;
         return i;
     }
-    vector<string> State::getActions(){
+    vector<string> State::getActions()const{
         vector<string> a = moves;
         return a;
     }
@@ -56,25 +56,6 @@ namespace CLNSIH001{
         for (int i=0; i<6; i++){
             states[i].val = v.at(i);
         }
-        
-        /////////////////
-        cout << "states" << "{s" << states[0].getState();
-        for (int i=1;i<6;i++){
-            cout << ", s" << states[i].getState();
-        }
-        cout << '}' << endl;
-        cout << "values" << '{' << states[0].val;
-        for (int i=1;i<6;i++){
-            cout << ", " << states[i].val;
-        }
-        cout << '}' << endl;
-        cout << "policy" << '{' << pi[0];
-        for (int i=1;i<6;i++){
-            cout << ", " << pi[i];
-        }
-        cout << '}' << endl;
-        cout << "number of iterations: " << iterations << endl;
-        ////////////////
     }
     int Algorithm::Reward(State s, string action){
         if (s.getState() == 2 && action == "right"){return 50;}
@@ -85,7 +66,7 @@ namespace CLNSIH001{
         }
     }  
     
-    State Algorithm::movesTo(State s, string action){
+    State Algorithm::movesTo(State s, string action)const{
         if (action == "up"){
             int nextState = s.getState()-3;
             return states[nextState-1];
@@ -149,8 +130,51 @@ namespace CLNSIH001{
         }
         return make_tuple(policy, values);
     }
+
+    std::ostream & operator<<(std::ostream& os, const Algorithm & VIA){
+        os << "states" << "{s" << VIA.states[0].getState();
+        for (int i=1;i<6;i++){
+            os << ", s" << VIA.states[i].getState();
+        }
+        os << '}' << '\n';
+        os << "values" << '{' << VIA.states[0].val;
+        for (int i=1;i<6;i++){
+            os << ", " << VIA.states[i].val;
+        }
+        os << '}' << '\n';
+        os << "policy" << '{' << VIA.pi[0];
+        for (int i=1;i<6;i++){
+            os << ", " << VIA.pi[i];
+        }
+        os << '}' << '\n';
+        os << "number of iterations: " << VIA.iterations << '\n';
+
+        os << "\n////////////////////////////////////////////////////////////////\n";
+
+        os << "\n1.   How many iterations does it take for the Value Iteration algorithm to converge?\n";
+        os << "     number of iterations: " << VIA.iterations << '\n';
+        os << "     s" << VIA.states[0].getState() << ": " << VIA.states[0].val;
+        for (int i=1;i<6;i++){
+            os << ", s" << VIA.states[i].getState() << ": " << VIA.states[0].val;
+        }
+        os << '\n' << '\n';
+        os << "2.   Assume we start in state s1, give the states that form the optimal policy (π∗) to reach the terminal state (s3).\n";
+        os << "     s" << VIA.states[0].getState() << " at " << VIA.states[0].getGridIndex() << " moves " << VIA.pi[VIA.states[0].index] << " to s" << VIA.movesTo(VIA.states[0], VIA.pi[VIA.states[0].index]).getState() << ".\n";
+        os << "     s" << VIA.s4.getState() << " at " << VIA.s4.getGridIndex() << " moves " << VIA.pi[VIA.s4.index] << " to s" << VIA.movesTo(VIA.s4, VIA.pi[VIA.s4.index]).getState() << ".\n";
+        os << "     s5 at " << VIA.s5.getGridIndex() << " moves right to s6.\n";
+        os << "     s6 at " << VIA.s6.getGridIndex() << " moves up to s3.\n";
+        os << "     so graphically...\n"<< "        s1    s2    s3\n        |            ^\n        |            |\n        s4 -> s5 -> s6";
+        os << '\n' << '\n';
+        os << "3.   Is it possible to change the reward function function so that V∗ changes, but the optimal policy (π∗) remains unchanged?\n";
+        return os;
+    }
 }
 
 int main(){
-    CLNSIH001::Algorithm algrthm; return 0;
+    CLNSIH001::Algorithm algrthm;
+    std::cout << algrthm;
+    std::ofstream answers("Output.txt", std::ios::out);
+    answers << algrthm;
+    answers.close();
+    return 0;
 }
