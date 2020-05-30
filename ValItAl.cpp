@@ -58,12 +58,18 @@ namespace CLNSIH001{
         }
     }
     int Algorithm::Reward(State s, string action){
-        if (s.getState() == 2 && action == "right"){return 50;}
-        else if (s.getState() == 6 && action == "up"){return 100;}
+        if (s.getState() == 2 && action == "right"){return /*3**/50/*0*/;}
+        else if (s.getState() == 6 && action == "up"){return /*3**/100/*0*/;}
+        /*else if (s.getState() == 5 && action == "right"){return 3;}
+        else if (s.getState() == 5 && action == "up"){return 5;}
+        else if (s.getState() == 4 && action == "right"){return -10;}
+        else if (s.getState() == 2 && action == "down"){return -15;}*/
         else
         {
-            return 0;
+            //return 5;
+            return /*3**/0/*7*/;
         }
+        
     }  
     
     State Algorithm::movesTo(State s, string action)const{
@@ -158,14 +164,21 @@ namespace CLNSIH001{
             os << ", s" << VIA.states[i].getState() << ": " << VIA.states[0].val;
         }
         os << '\n' << '\n';
-        os << "2.   Assume we start in state s1, give the states that form the optimal policy (π∗) to reach the terminal state (s3).\n";
-        os << "     s" << VIA.states[0].getState() << " at " << VIA.states[0].getGridIndex() << " moves " << VIA.pi[VIA.states[0].index] << " to s" << VIA.movesTo(VIA.states[0], VIA.pi[VIA.states[0].index]).getState() << ".\n";
-        os << "     s" << VIA.s4.getState() << " at " << VIA.s4.getGridIndex() << " moves " << VIA.pi[VIA.s4.index] << " to s" << VIA.movesTo(VIA.s4, VIA.pi[VIA.s4.index]).getState() << ".\n";
-        os << "     s5 at " << VIA.s5.getGridIndex() << " moves right to s6.\n";
-        os << "     s6 at " << VIA.s6.getGridIndex() << " moves up to s3.\n";
+        os << "2.   Assuming we start in state s1, give the states that form the optimal policy (π∗) to reach the terminal state (s3).\n";
+        os << "     state " << VIA.states[0].getState() << " at " << VIA.states[0].getGridIndex() << " moves " << VIA.pi[VIA.states[0].index] << " to s" << VIA.movesTo(VIA.states[0], VIA.pi[VIA.states[0].index]).getState() << ".\n";
+        os << "     state " << VIA.s4.getState() << " at " << VIA.s4.getGridIndex() << " moves " << VIA.pi[VIA.s4.index] << " to s" << VIA.movesTo(VIA.s4, VIA.pi[VIA.s4.index]).getState() << ".\n";
+        os << "     state 5 at " << VIA.s5.getGridIndex() << " moves right to s6.\n";
+        os << "     state 6 at " << VIA.s6.getGridIndex() << " moves up to s3.\n";
         os << "     so graphically...\n"<< "        s1    s2    s3\n        |            ^\n        |            |\n        s4 -> s5 -> s6";
         os << '\n' << '\n';
-        os << "3.   Is it possible to change the reward function function so that V∗ changes, but the optimal policy (π∗) remains unchanged?\n";
+        os << "3.   Is it possible to change the reward function so that V∗ changes, but the optimal policy (π∗) remains unchanged?\n";
+        os << "     Yes it is possible. When I mmultiplied the reward funtion for each transition by a factor of 3 and ran the code, I got new values for each state \n";
+        os << "     but the policy remain unchanged. Same thing happened when I changed every 0 reward to 5 instead of multiplying everything by 3.\n";
+        os << "     values{153.6, 192, 0, 192, 240, 300}\n     policy{down, down, , right, right, up}\n";
+        os << "     values{63.4, 73, 0, 73, 85, 100}\n     policy{down, down, , right, right, up}\n";
+        os << "     When I changed the rewards for each transition between states to any number (view commented out parts of reward function),\n";
+        os << "     the policies, values and even iterations changed:\n";
+        os << "     values{35, 35, 0, 35, 35, 35}\n     policy{down, left, , up, left, left}\n     number of iterations: 157\n";
         return os;
     }
 }
