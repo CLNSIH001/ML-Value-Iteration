@@ -1,5 +1,6 @@
 #include "ValItAl.hpp"
 #include <fstream>
+#include <sstream>
 
 namespace CLNSIH001{
     using namespace std;
@@ -88,7 +89,8 @@ namespace CLNSIH001{
         else if (action == "right"){
             int nextState = s.getState()+1;
             return states[nextState-1];
-        }       
+        }
+        return s;       
     }
     
     tuple<array<string, 6>, vector<double> > Algorithm::val_it_al(double threshold){
@@ -125,6 +127,7 @@ namespace CLNSIH001{
         for (State s : states){
             double max = 0;
             string moves;
+            if (s.isTerminal()){moves = "stay";}
             for (string a : s.getActions()){
                 double r = Reward(s, a) + discount*Pr*values.at(movesTo(s,a).index);
                 if (max < r){
@@ -161,7 +164,7 @@ namespace CLNSIH001{
         os << "     number of iterations: " << VIA.iterations << '\n';
         os << "     s" << VIA.states[0].getState() << ": " << VIA.states[0].val;
         for (int i=1;i<6;i++){
-            os << ", s" << VIA.states[i].getState() << ": " << VIA.states[0].val;
+            os << ", s" << VIA.states[i].getState() << ": " << VIA.states[i].val;
         }
         os << '\n' << '\n';
         os << "2.   Assuming we start in state s1, give the states that form the optimal policy (π∗) to reach the terminal state (s3).\n";
@@ -183,9 +186,8 @@ namespace CLNSIH001{
     }
 }
 
-int main(){
+int main(int argc, char * argv[]){
     CLNSIH001::Algorithm algrthm;
-    std::cout << algrthm;
     std::ofstream answers("Output.txt", std::ios::out);
     answers << algrthm;
     answers.close();

@@ -1,5 +1,8 @@
-ValItAl:
-	g++ -o ValItAl *.cpp --std=c++11
+run: compile
+	./bin/ValItAl
+
+compile:
+	g++ -o bin/ValItAl src/*.cpp --std=c++11
 
 clean:
-	rm ValItAl *.txt
+	rm Output.txt bin/ValItAl
